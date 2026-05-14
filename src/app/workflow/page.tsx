@@ -42,7 +42,7 @@ export default function WorkflowPage() {
       <div className="grid gap-4 lg:grid-cols-4">
         {lanes.map((lane) => (
           <section key={lane.title} className="rounded-3xl border border-white/10 bg-white/5 p-5">
-            <div className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-200/80">{lane.title}</div>
+            <div className="text-xs font-semibold uppercase tracking-[0.35em] text-[#f0e050]/80">{lane.title}</div>
             <ul className="mt-4 grid gap-2">
               {lane.items.map((item) => (
                 <li

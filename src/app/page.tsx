@@ -36,7 +36,7 @@ export default function HomePage() {
 
       <div className="mt-10 grid gap-4 md:grid-cols-2">
         <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6">
-          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-200/80">What we handle</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-[#f0e050]/80">What we handle</div>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-7 text-slate-300">
             <li>Residential and commercial property damage claims</li>
             <li>Denied, partial denials, underpaid, and delayed claims</li>
@@ -46,7 +46,7 @@ export default function HomePage() {
         </div>
 
         <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6">
-          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-200/80">States served</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-[#f0e050]/80">States served</div>
           <div className="mt-4 flex flex-wrap gap-2">
             {BRAND.states.map((s) => (
               <span key={s} className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">
@@ -57,7 +57,7 @@ export default function HomePage() {
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/request-access"
-              className="inline-flex items-center justify-center rounded-full bg-amber-300 px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-amber-200"
+              className="inline-flex items-center justify-center rounded-full bg-[#d0a020] px-6 py-3 text-sm font-semibold text-black hover:opacity-90"
             >
               Request access
             </Link>
@@ -75,7 +75,7 @@ export default function HomePage() {
       </div>
 
       <div className="mt-12 rounded-3xl border border-white/10 bg-white/5 p-6">
-        <div className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-200/80">Audience</div>
+        <div className="text-xs font-semibold uppercase tracking-[0.35em] text-[#f0e050]/80">Audience</div>
         <div className="mt-3 text-sm leading-7 text-slate-300">
           This system is intended for <span className="font-semibold">co-counsel attorneys/firms</span> and Covenant Law Group{' '}
           <span className="font-semibold">support staff</span> (paralegals, accounting, claims specialists). It is not a public-facing consumer site.

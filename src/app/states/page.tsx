@@ -10,7 +10,7 @@ export default function StatesPage() {
       <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
         <div className="flex flex-wrap gap-3">
           {BRAND.states.map((s) => (
-            <div key={s} className="rounded-2xl border border-white/10 bg-slate-950/30 px-5 py-4 text-sm text-white">
+            <div key={s} className="rounded-2xl border border-white/10 bg-black/30 px-5 py-4 text-sm text-white">
               {s}
             </div>
           ))}

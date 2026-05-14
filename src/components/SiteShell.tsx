@@ -7,6 +7,7 @@ const nav = [
   { href: '/how-it-works', label: 'How it works' },
   { href: '/states', label: 'States served' },
   { href: '/request-access', label: 'Request access' },
+  { href: '/admin', label: 'Admin' },
 ];
 
 export function SiteShell({

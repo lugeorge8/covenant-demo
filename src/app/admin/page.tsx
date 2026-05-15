@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { MOCK_CASES } from '@/lib/mock-data';
+import { query } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,17 +20,60 @@ export default async function AdminCasesPage({
   const department = (sp.department ?? '').trim();
   const status = (sp.status ?? '').trim();
 
-  const filtered = MOCK_CASES.filter((c) => {
-    if (department && c.department !== department) return false;
-    if (status && c.status !== status) return false;
-    if (!q) return true;
-    return (
-      c.id.toLowerCase().includes(q) ||
-      c.insured.toLowerCase().includes(q) ||
-      c.carrier.toLowerCase().includes(q) ||
-      c.state.toLowerCase().includes(q)
+  const where: string[] = [];
+  const params: any[] = [];
+
+  if (department) {
+    params.push(department);
+    where.push(`department = $${params.length}`);
+  }
+  if (status) {
+    params.push(status);
+    where.push(`status = $${params.length}`);
+  }
+  if (q) {
+    params.push(`%${q}%`);
+    where.push(
+      `(lower(id) like $${params.length} or lower(insured) like $${params.length} or lower(carrier) like $${params.length} or lower(state) like $${params.length})`
     );
-  });
+  }
+
+  const whereSql = where.length ? `where ${where.join(' and ')}` : '';
+
+  const rows = await query<{
+    id: string;
+    insured: string;
+    carrier: string;
+    state: string;
+    assigned_firm: string;
+    department: string;
+    status: string;
+    next_step: string;
+    docs_count: number;
+    priority: string;
+    last_touch: string;
+  }>(
+    `select id, insured, carrier, state, assigned_firm, department, status, next_step, docs_count, priority, last_touch
+     from clg_cases
+     ${whereSql}
+     order by updated_at desc
+     limit 200`,
+    params
+  );
+
+  const filtered = rows.rows.map((c) => ({
+    id: c.id,
+    insured: c.insured,
+    carrier: c.carrier,
+    state: c.state,
+    assignedFirm: c.assigned_firm,
+    department: c.department as any,
+    status: c.status,
+    nextStep: c.next_step,
+    docs: Number(c.docs_count ?? 0),
+    priority: (c.priority as any) ?? 'Normal',
+    lastTouch: c.last_touch,
+  }));
 
   const counts = {
     total: filtered.length,

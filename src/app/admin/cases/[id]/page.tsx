@@ -1,13 +1,52 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { MOCK_CASES } from '@/lib/mock-data';
+import { query, sql } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminCaseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const c = MOCK_CASES.find((x) => x.id === id);
-  if (!c) return notFound();
+  const caseRes = await query<{
+    id: string;
+    insured: string;
+    carrier: string;
+    state: string;
+    assigned_firm: string;
+    department: string;
+    status: string;
+    next_step: string;
+    docs_count: number;
+    priority: string;
+    last_touch: string;
+  }>(
+    `select id, insured, carrier, state, assigned_firm, department, status, next_step, docs_count, priority, last_touch
+     from clg_cases where id = $1 limit 1`,
+    [id]
+  );
+  const row = caseRes.rows[0];
+  if (!row) return notFound();
+
+  const c = {
+    id: row.id,
+    insured: row.insured,
+    carrier: row.carrier,
+    state: row.state,
+    assignedFirm: row.assigned_firm,
+    department: row.department,
+    status: row.status,
+    nextStep: row.next_step,
+    docs: Number(row.docs_count ?? 0),
+    priority: row.priority,
+    lastTouch: row.last_touch,
+  };
+
+  const notesRes = await sql<{ id: string; author: string; body: string; created_at: string }>`
+    select id::text, author, body, created_at
+    from clg_case_notes
+    where case_id = ${id}
+    order by created_at desc
+    limit 50
+  `;
 
   return (
     <div className="grid gap-6">
@@ -52,15 +91,44 @@ export default async function AdminCaseDetailPage({ params }: { params: Promise<
           </div>
 
           <div className="mt-6 rounded-2xl border border-white/10 bg-black/30 p-4">
-            <div className="text-xs uppercase tracking-[0.25em] text-zinc-400">Notes (demo)</div>
-            <div className="mt-2 space-y-3 text-sm text-zinc-200">
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                <div className="text-xs text-zinc-400">2026-05-10 • Staff</div>
-                <div className="mt-1">Requested missing documentation from referral partner.</div>
-              </div>
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3">
-                <div className="text-xs text-zinc-400">2026-05-08 • Staff</div>
-                <div className="mt-1">Carrier acknowledgement letter uploaded; waiting on contractor estimate.</div>
+            <div className="text-xs uppercase tracking-[0.25em] text-zinc-400">Notes</div>
+            <div className="mt-3 grid gap-2">
+              <form
+                action={async (formData: FormData) => {
+                  'use server';
+                  const body = String(formData.get('body') ?? '').trim();
+                  if (!body) return;
+                  await sql`
+                    insert into clg_case_notes (case_id, author, body)
+                    values (${id}, 'Staff', ${body})
+                  `;
+                  await sql`update clg_cases set updated_at = now(), last_touch = current_date where id = ${id}`;
+                }}
+                className="grid gap-2"
+              >
+                <textarea
+                  name="body"
+                  className="min-h-20 rounded-xl border border-white/10 bg-black/30 px-3 py-2 text-sm text-white"
+                  placeholder="Add a note…"
+                />
+                <button className="h-10 w-fit rounded-xl bg-[#d0a020] px-4 text-sm font-semibold text-black hover:opacity-90">
+                  Add note
+                </button>
+              </form>
+
+              <div className="mt-2 space-y-3 text-sm text-zinc-200">
+                {notesRes.rows.length ? (
+                  notesRes.rows.map((n) => (
+                    <div key={n.id} className="rounded-xl border border-white/10 bg-white/5 p-3">
+                      <div className="text-xs text-zinc-400">
+                        {new Date(n.created_at).toLocaleString()} • {n.author}
+                      </div>
+                      <div className="mt-1 whitespace-pre-wrap">{n.body}</div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-sm text-zinc-400">No notes yet.</div>
+                )}
               </div>
             </div>
           </div>

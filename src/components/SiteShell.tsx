@@ -14,19 +14,14 @@ export function SiteShell({
   title,
   subtitle,
   children,
-  variant = 'dark',
 }: {
   title: string;
   subtitle?: string;
   children: React.ReactNode;
-  variant?: 'dark' | 'dullYellow';
 }) {
-  const shellBg = variant === 'dullYellow' ? 'bg-[#b8ad5a]' : 'bg-slate-950';
-  const chromeBg = variant === 'dullYellow' ? 'bg-black/35' : 'bg-slate-950/60';
-
   return (
-    <div className={`min-h-screen ${shellBg} text-white`}>
-      <header className={`border-b border-white/10 ${chromeBg} backdrop-blur`}>
+    <div className="min-h-screen bg-slate-950 text-white">
+      <header className="border-b border-white/10 bg-slate-950/60 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-6 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="group flex items-center gap-3">
@@ -57,7 +52,7 @@ export function SiteShell({
 
       <main className="mx-auto w-full max-w-6xl px-6 py-12">
         <div className="max-w-3xl">
-          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-[#f0e050]/80">Covenant Law Group</div>
+          <div className="text-xs font-semibold uppercase tracking-[0.35em] text-amber-200/80">Covenant Law Group</div>
           <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">{title}</h1>
           {subtitle ? <p className="mt-3 text-base text-slate-300">{subtitle}</p> : null}
         </div>
@@ -65,7 +60,7 @@ export function SiteShell({
         <div className="mt-10">{children}</div>
       </main>
 
-      <footer className={`border-t border-white/10 ${chromeBg}`}> 
+      <footer className="border-t border-white/10 bg-slate-950/60">
         <div className="mx-auto flex max-w-6xl flex-col gap-2 px-6 py-10 text-xs text-slate-400 md:flex-row md:items-center md:justify-between">
           <div>© {new Date().getFullYear()} {BRAND.orgName}. Demo only.</div>
           <div className="flex gap-4">

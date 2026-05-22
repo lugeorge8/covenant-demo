@@ -20,6 +20,7 @@ const highlights = [
 export default function HomePage() {
   return (
     <SiteShell
+      variant="dullYellow"
       title="Property damage claims under $100k — handled with the same discipline as larger cases."
       subtitle={
         "Covenant Law Group exists for the cases other firms reject. We bring structure, documentation, and momentum to denied, delayed, or underpaid property damage claims — and we do it with a workflow built for law firms."
